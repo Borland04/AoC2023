@@ -33,12 +33,15 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , ghc
+    , text
   default-language: Haskell2010
 
 executable AoC-exe
   main-is: Main.hs
   other-modules:
       One.App
+      Two.App
       Paths_AoC
   autogen-modules:
       Paths_AoC
@@ -48,6 +51,8 @@ executable AoC-exe
   build-depends:
       AoC
     , base >=4.7 && <5
+    , ghc
+    , text
   default-language: Haskell2010
 
 test-suite AoC-test
@@ -63,4 +68,6 @@ test-suite AoC-test
   build-depends:
       AoC
     , base >=4.7 && <5
+    , ghc
+    , text
   default-language: Haskell2010
