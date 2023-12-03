@@ -41,6 +41,7 @@ executable AoC-exe
   main-is: Main.hs
   other-modules:
       One.App
+      Three.App
       Two.App
       Paths_AoC
   autogen-modules:
