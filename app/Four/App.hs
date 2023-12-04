@@ -6,15 +6,12 @@ import Data.List(find)
 
 scratchcards :: IO ()
 scratchcards = do
-  putStrLn "Day 4"
   content <- lines <$> readFile "app/Four/input.txt"
   let cards = map parseCard content
-  putStrLn "Task 1:"
   let res = foldr (+) 0 $ map calculatePoints cards
-  putStrLn $ show res
-  putStrLn "Task 2:"
+  putStrLn $ "# Task 1: " ++ show res
   let res2 = foldr (+) 0 . map length $ mapCardsToWinCards cards
-  putStrLn $ show res2
+  putStrLn $ "# Task 2: " ++ show res2
 
 
 parseCard :: String -> ([Int], [Int])

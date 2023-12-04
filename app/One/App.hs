@@ -18,13 +18,13 @@ stringifiedDigitsMap = [
     ("zero", "0")]
 
 
-readCalibrations :: String -> IO ()
-readCalibrations filename = do
-  content <- lines <$> readFile filename
+readCalibrations :: IO ()
+readCalibrations = do
+  content <- lines <$> readFile "app/One/input.txt"
   let res = foldr (+) 0 . map readCalibrationLine $ content
   let res2 = foldr (+) 0 . map readCalibrationLine2 $ content
-  putStrLn $ "Task 1: " ++ show res
-  putStrLn $ "Task 2: " ++ show res2
+  putStrLn $ "# Task 1: " ++ show res
+  putStrLn $ "# Task 2: " ++ show res2
 
 
 -- Task 1

@@ -8,15 +8,12 @@ data SchematicsAtom = Symbol { symbol :: String, row :: Int, index :: Int }
 
 readEngineSchematics :: IO ()
 readEngineSchematics = do
-  putStrLn "Day 3"
   content <- lines <$> readFile "app/Three/input.txt"
   let schematics = parseSchematics content
-  putStrLn "Task 1: "
   let res = foldr (+) 0 . map number $ findNumsAdjacentToSymbols schematics
-  putStrLn $ show res
-  putStrLn "Task 2: "
+  putStrLn $ "# Task 1: " ++ show res
   let res2 = foldr (+) 0 . map (\(a, b) -> number a * number b) $ findGears schematics
-  putStrLn $ show res2
+  putStrLn $ "# Task 2: " ++ show res2
 
 parseSchematics :: [String] -> [SchematicsAtom]
 parseSchematics = parseSchematics' 0

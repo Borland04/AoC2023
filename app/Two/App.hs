@@ -9,14 +9,15 @@ type RevealedCube = (String, Int)
 type CubeSet = [RevealedCube]
 data Game = Game { gameId :: Int, sets :: [CubeSet] } deriving Show
 
-playCubesGame :: CubeSet -> String -> IO ()
-playCubesGame constraints filename = do
-  content <- lines <$> readFile filename
+playCubesGame :: IO ()
+playCubesGame = do
+  let constraints = [("red", 12),  ("green", 13), ("blue", 14)]
+  content <- lines <$> readFile "app/Two/input.txt"
   let games = map parseGame content
   let res = foldr (+) 0 . map gameId . filter (isGamePossible constraints) $ games
-  putStrLn $ "Task 1: " ++ show res
+  putStrLn $ "# Task 1: " ++ show res
   let res2 = foldr (+) 0 . map power $ games
-  putStrLn $ "Task 2: " ++ show res2
+  putStrLn $ "# Task 2: " ++ show res2
 
 parseGame :: String -> Game
 parseGame s = readSets . dropColon . readGameId . dropGame $ (s, Game)

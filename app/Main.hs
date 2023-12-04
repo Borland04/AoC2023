@@ -8,9 +8,14 @@ import Four.App (scratchcards)
 
 main :: IO ()
 main = do
-  putStrLn "Day 1"
-  readCalibrations "app/One/input.txt"
-  putStrLn "Day 2"
-  playCubesGame [("red", 12),  ("green", 13), ("blue", 14)] "app/Two/input.txt"
+  putStrLn "-- Day 1 --"
+  readCalibrations
+  putStrLn ""
+  putStrLn "-- Day 2 --"
+  playCubesGame
+  putStrLn ""
+  putStrLn "-- Day 3 --"
   readEngineSchematics
+  putStrLn ""
+  putStrLn "-- Day 4 --"
   scratchcards
