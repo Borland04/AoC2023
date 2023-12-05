@@ -34,12 +34,14 @@ library
   build-depends:
       base >=4.7 && <5
     , ghc
+    , split
     , text
   default-language: Haskell2010
 
 executable AoC-exe
   main-is: Main.hs
   other-modules:
+      Five.App
       Four.App
       One.App
       Three.App
@@ -54,6 +56,7 @@ executable AoC-exe
       AoC
     , base >=4.7 && <5
     , ghc
+    , split
     , text
   default-language: Haskell2010
 
@@ -71,5 +74,6 @@ test-suite AoC-test
       AoC
     , base >=4.7 && <5
     , ghc
+    , split
     , text
   default-language: Haskell2010
