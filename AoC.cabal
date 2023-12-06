@@ -44,6 +44,7 @@ executable AoC-exe
       Five.App
       Four.App
       One.App
+      Six.App
       Three.App
       Two.App
       Paths_AoC
