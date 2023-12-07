@@ -3,6 +3,22 @@ module Seven.App where
 import Data.List(sortOn, sortBy)
 import Data.Ord(Down(..))
 
+data HandType = HighCard
+  | OnePair
+  | TwoPair
+  | ThreeOfKind
+  | FullHouse
+  | FourOfKind
+  | FiveOfKind
+  deriving (Show, Eq, Ord)
+
+type Card = Char
+cards :: [Card]
+cards = [ '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+
+handTypes :: [(HandType, [[Card]] -> Bool)]
+handTypes = [(FiveOfKind, fiveOfKind), (FourOfKind, fourOfKind), (FullHouse, fullHouse), (ThreeOfKind, threeOfKind), (TwoPair, twoPair), (OnePair, onePair)]
+
 camelCards :: IO ()
 camelCards = do
   content <- lines <$> readFile "app/Seven/input.txt"
@@ -18,15 +34,12 @@ calculateWinnings :: [([Card], Int)] -> Int
 calculateWinnings = foldr (\(rank, (_, bid)) acc -> acc + (bid * rank)) 0 . zip [1..] . orderHands
 
 orderHands :: [([Card], Int)] -> [([Card], Int)]
-orderHands hands = map (\((h, _), b) -> (h, b)) . sortBy (\a b -> compareHands (fst a) (fst b)) . map (\(h, b) -> ((h, sortOn (Down . length) (groupCards h)), b)) $ hands
+orderHands hands = map snd . sortBy (\(ta, (ha, _)) (tb, (hb, _)) -> compareHands (ta, ha) (tb, hb)) . map (\(h, b) -> (handType h, (h, b))) $ hands
 
-
-type Card = Char
-cards :: [Card]
-cards = [ '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
-
-handTypes :: [([[Card]] -> Bool)]
-handTypes = [fiveOfKind, fourOfKind, fullHouse, threeOfKind, twoPair, onePair, highCard]
+handType :: [Card] -> HandType
+handType h = handType' handTypes $ sortOn (Down . length) $ groupCards h
+  where handType' ((t, f):ts) grp = if f grp then t else handType' ts grp
+        handType' [] _ = HighCard
 
 -- Note, Important: order by group size DESC before calling these methods
 
@@ -64,14 +77,11 @@ groupCards = foldr addToGroup []
         addToGroup c (a:as) = if head a == c then (c:a) : as else a : addToGroup c as
 
 
-compareHands :: ([Card], [[Card]]) -> ([Card], [[Card]]) -> Ordering
-compareHands a b = compareHands' a b handTypes
-  where compareHands' a b (t:ts) = case (t (snd a), t (snd b)) of
-                                    (True, False) -> GT
-                                    (False, True) -> LT
-                                    (True, True) -> compareSameTypeHands (fst a) (fst b)
-                                    (False, False) -> compareHands' a b ts
-        compareHands' a b [] = compareSameTypeHands (fst a) (fst b)
+compareHands :: (HandType, [Card]) -> (HandType, [Card]) -> Ordering
+compareHands (ta, ha) (tb, hb) = case compare ta tb of
+                                    LT -> LT
+                                    GT -> GT
+                                    EQ -> compareSameTypeHands ha hb
 
 
 compareSameTypeHands :: [Card] -> [Card] -> Ordering

@@ -24,6 +24,7 @@ dependencies:
 - ghc
 - text
 - split
+- extra
 
 ghc-options:
 - -Wall
