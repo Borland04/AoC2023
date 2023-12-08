@@ -25,6 +25,8 @@ dependencies:
 - text
 - split
 - extra
+- parsec
+- containers
 
 ghc-options:
 - -Wall
