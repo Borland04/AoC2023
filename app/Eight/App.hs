@@ -20,20 +20,18 @@ navigateDesert = do
   putStrLn $ "# Task 2: " ++ show res2
 
 traversePath :: Map.Map Location MapNode -> (Location -> Bool) -> (Location -> Bool) -> [Direction] -> Int
-traversePath desertMap startPredicate endPredicate allDirs = traversePath' desertMap (map (\loc -> (desertMap ! loc, False, [])) . filter startPredicate $ (Map.keys desertMap)) allDirs 0
-  where traversePath' :: Map.Map Location MapNode -> [(MapNode, Bool, [Int])] -> [Direction] -> Int -> Int
-        traversePath' m c [] acc = traversePath' m c allDirs acc
-        traversePath' m currLocs (d:ds) acc 
-          | all (\(node, finished, cachedEnds) -> (not finished && endPredicate (from node)) || finished && any (\e -> acc `mod` e == 0) cachedEnds) currLocs = acc
-          | otherwise= let nextLocs = map handleNode currLocs
-                       in acc `seq` traversePath' m nextLocs ds (acc + 1)
-          where handleNode :: (MapNode, Bool, [Int]) -> (MapNode, Bool, [Int])
-                handleNode mapNode@(node, finished, cachedEnds)
-                  | finished = mapNode
-                  | endPredicate (from node) = if (not . null) cachedEnds && (acc `mod` head cachedEnds) == 0 then (node, True, cachedEnds) else (nextLoc node, False, cachedEnds ++ [acc])
-                  | otherwise = (nextLoc node, False, cachedEnds)
-                nextLoc = (m !) . nextLocSupplier
-                nextLocSupplier = case d of LeftDir -> leftTo; RightDir -> rightTo;
+traversePath desertMap startPredicate endPredicate allDirs =  foldr min maxBound . map (foldr lcm 1) . foldr (\xs acc -> [x : as | x <- xs, as <- acc]) [[]] . map (safeTraverse 0 Map.empty allDirs) . map (desertMap !) . filter startPredicate $ (Map.keys desertMap)
+  where safeTraverse :: Int -> Map.Map Location [Int] -> [Direction] -> MapNode -> [Int]
+        safeTraverse step traverseLog [] n = safeTraverse step traverseLog allDirs n
+        safeTraverse step traverseLog (d:ds) n = step `seq` if (endPredicate . from $ n)
+                                                              then (if any (== (length ds)) (Map.findWithDefault [] (from n) traverseLog)
+                                                                then []
+                                                                else step : safeTraverse (step + 1) (Map.insertWith (++) (from n) [length ds] traverseLog) ds (nextNode d n))
+                                                              else safeTraverse (step + 1) traverseLog ds (nextNode d n)
+        nextNode d n = desertMap ! nextStepSupplier d n
+        nextStepSupplier LeftDir = leftTo
+        nextStepSupplier RightDir = rightTo
+
 
 parseInput :: [String] -> ([Direction], Map.Map Location MapNode)
 parseInput (dirsStr:_:nodeStrs) = (parseDirections dirsStr, foldr (\node acc -> Map.insert (from node) node acc) Map.empty . map parseNode $ nodeStrs)
