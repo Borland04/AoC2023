@@ -1,6 +1,7 @@
 module Six.App where
 
 import Data.List(foldl')
+import Control.Applicative((<|>))
 
 type Time = Int
 type Distance = Int
@@ -34,6 +35,28 @@ parseInput2 [timeLine, distanceLine] = zip (parseTime timeLine) (parseDistance d
         parseNumsLine = (: []) . read . filter (/= ' ')
 parseInput2 _ = error "Illegal state: expected two lines of input"
 
-findNumOfWinWays time distanceToBeat = foldl' (\acc (a, b) -> acc + (if a == b then 1 else 2)) 0 . filter (\(a, b) -> a * b > distanceToBeat) $ generateWays time
-generateWays :: Int -> [(Int, Int)]
-generateWays n = [(i, n - i) | i <- [1..(n `div` 2)]]
+findNumOfWinWays time distanceToBeat = let firstWinHold = maybe (time `div` 2) id (binSearch searchCmp 1 (time - 1))
+                                       in ((time `div` 2) - firstWinHold + 1) * 2 - (if time `mod` 2 == 0 then 1 else 0)
+  where searchCmp :: Int -> Ordering
+        searchCmp a
+          | a * (time - a) <= distanceToBeat = LT
+          | (a - 1) * (time - (a - 1)) <= distanceToBeat = EQ
+          | otherwise = GT
+
+binSearch :: (Int -> Ordering) -> Int -> Int -> Maybe Int
+binSearch comp start end
+  | start > end = Nothing
+  | start == end = case comp start of
+                    EQ -> Just start
+                    _  -> Nothing
+  | start == end + 1 = case comp start of
+                        LT -> Nothing
+                        EQ -> Just start
+                        GT -> case comp end of
+                                EQ -> Just end
+                                _  -> Nothing
+  | otherwise = let half = (start + end) `div` 2
+                in case comp half of
+                  EQ -> Just half
+                  GT -> binSearch comp start half
+                  LT -> binSearch comp (half + 1) end
