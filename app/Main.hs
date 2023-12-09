@@ -6,6 +6,9 @@ import Three.App (readEngineSchematics)
 import Four.App (scratchcards)
 import Five.App (seeds)
 import Six.App (boatsRace)
+import Seven.App(camelCards)
+import Eight.App(navigateDesert)
+import Nine.App(ecosystemReport)
 
 
 main :: IO ()
@@ -27,4 +30,12 @@ main = do
   putStrLn ""
   putStrLn "-- Day 6 --"
   boatsRace
-
+  putStrLn ""
+  putStrLn "-- Day 7 --"
+  camelCards
+  putStrLn ""
+  putStrLn "-- Day 8 --"
+  navigateDesert
+  putStrLn ""
+  putStrLn "-- Day 9 --"
+  ecosystemReport
