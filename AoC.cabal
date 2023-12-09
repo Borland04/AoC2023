@@ -47,6 +47,7 @@ executable AoC-exe
       Eight.App
       Five.App
       Four.App
+      Nine.App
       One.App
       Seven.App
       Six.App
