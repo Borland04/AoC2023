@@ -39,6 +39,7 @@ library
     , parsec
     , split
     , text
+    , transformers
   default-language: Haskell2010
 
 executable AoC-exe
@@ -51,6 +52,7 @@ executable AoC-exe
       One.App
       Seven.App
       Six.App
+      Ten.App
       Three.App
       Two.App
       Paths_AoC
@@ -68,6 +70,7 @@ executable AoC-exe
     , parsec
     , split
     , text
+    , transformers
   default-language: Haskell2010
 
 test-suite AoC-test
@@ -89,4 +92,5 @@ test-suite AoC-test
     , parsec
     , split
     , text
+    , transformers
   default-language: Haskell2010
