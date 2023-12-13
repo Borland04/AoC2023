@@ -9,6 +9,8 @@ import Six.App (boatsRace)
 import Seven.App(camelCards)
 import Eight.App(navigateDesert)
 import Nine.App(ecosystemReport)
+import Ten.App(findAnimal)
+import Eleven.App(galaxiesDistance)
 
 
 main :: IO ()
@@ -39,3 +41,7 @@ main = do
   putStrLn ""
   putStrLn "-- Day 9 --"
   ecosystemReport
+  putStrLn "-- Day 10 --"
+  findAnimal
+  putStrLn "-- Day 11 --"
+  galaxiesDistance
