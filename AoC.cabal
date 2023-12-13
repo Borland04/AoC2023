@@ -46,6 +46,7 @@ executable AoC-exe
   main-is: Main.hs
   other-modules:
       Eight.App
+      Eleven.App
       Five.App
       Four.App
       Nine.App
