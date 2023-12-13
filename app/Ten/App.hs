@@ -8,8 +8,6 @@ import Data.Map.Strict((!?), (!))
 import qualified Data.Map.Strict as M
 import Control.Monad.Trans.State.Lazy(State, get, put, execState)
 
-import Debug.Trace(trace)
-
 data Pipe = Horizontal
           | Vertical
           | NW
@@ -34,18 +32,11 @@ findAnimal = do
   let areas = traverseEnclosedArea pipes islandMap
   let res2 = length . M.keys $ areas
   putStrLn $ "# Task 2: " ++ show res2
-  writeFile "app/Ten/output.txt" $ debugMap islandMap pipes areas
 
 parseInput :: [String] -> [[Pipe]]
 parseInput = map parseLine
   where parseLine = map parseChar
         parseChar c = maybe None id (snd <$> find ((== c) . fst) pipeChars)
-
-debugMap :: [[Pipe]] -> M.Map (Int, Int) Int -> M.Map (Int, Int) Char -> String
-debugMap pipes pipesMap areaMap = unlines $ map showLine [0..(length pipes - 1)]
-  where showLine r = map (\c -> if M.member (r, c) areaMap then 'I' else if M.member (r, c) pipesMap then (pipeSymbol (r, c)) else '.') [0..(length (pipes !! r) - 1)]
-        --pipeSymbol (r', c') = maybe '.' fst $ find ((== pipes !! r' !! c') . snd) pipeChars
-        pipeSymbol p = last . show $ pipesMap ! p
 
 traversePipes :: [[Pipe]] -> M.Map (Int, Int) Int
 traversePipes pipes = let startRow = maybe (error "Illegal state: start point not found") id $ findIndex (any (== Start)) pipes
